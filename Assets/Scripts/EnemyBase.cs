@@ -18,9 +18,9 @@ public class EnemyBase : MonoBehaviour
 
     public bool playerDetected = false;
 
-    private Vector2 target;
+    protected Vector2 target;
 
-    [SerializeField] private float minRange;
+    [SerializeField] protected float minRange;
 
     protected void Awake()
     {
@@ -63,6 +63,11 @@ public class EnemyBase : MonoBehaviour
         vision.radius = attackRange;
     }
 
+    protected void Wander()
+    { 
+        if (!playerDetected) wanderDistance = Vector2.Distance(transform.position, target);
+        if (!playerDetected && wanderDistance <= minRange) target = (Vector2)transform.position + Random.insideUnitCircle * Random.Range(0, wanderRadius);
+    }
 
     // Update is called once per frame
     protected virtual void Update()
@@ -71,13 +76,7 @@ public class EnemyBase : MonoBehaviour
         Debug.DrawLine(this.transform.position, target, Color.yellow);
     }
 
-    protected void Wander()
-    { 
-        if(!playerDetected) wanderDistance = Vector2.Distance(transform.position, target);
-        if (!playerDetected && wanderDistance <= minRange) target = (Vector2)transform.position + Random.insideUnitCircle * Random.Range(0, wanderRadius);
-    }
-
-    protected void FixedUpdate()
+    protected virtual void FixedUpdate()
     {
         if (playerDetected)
         {
@@ -88,6 +87,7 @@ public class EnemyBase : MonoBehaviour
 
     protected void Propel(Vector2 target)
     {
+        bod.AddForce(speed * 200f * Time.fixedDeltaTime * transform.up);
         Vector3 objectPosition = transform.position;
 
         target.x = target.x - objectPosition.x;
@@ -95,10 +95,6 @@ public class EnemyBase : MonoBehaviour
         float angle = Mathf.Atan2(target.y, target.x) * Mathf.Rad2Deg - 90;
         Quaternion targetRotation = Quaternion.Euler(new Vector3(0, 0, angle));
         transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.AngleAxis(angle, Vector3.forward), rotationSpeed * Time.fixedDeltaTime);
-        transform.Translate(-transform.right * speed * Time.fixedDeltaTime);
-        //bod.AddForce(speed * 200 * Time.deltaTime * transform.up);
-        //transform.position = Vector2.MoveTowards(transform.position, target, speed * Time.deltaTime);
-        //transform.position = Vector3.MoveTowards()
     }
 
     protected void MoveShipToPlayer()

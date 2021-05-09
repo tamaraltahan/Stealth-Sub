@@ -21,7 +21,7 @@ public class GunController : MonoBehaviour
     {
         player = FindObjectOfType<PlayerController>();
         enemy = this.transform.parent.gameObject;
-        defaultRotation = transform.rotation;
+        defaultRotation = transform.rotation * Quaternion.Euler(0, 0, 90);
         cools = attackCD;
     }
 
@@ -48,18 +48,13 @@ public class GunController : MonoBehaviour
 
     private void ResetGuns()
     {
-        Quaternion targetRotation = Quaternion.AngleAxis(rotationDegree, enemy.transform.forward);
-
         if (!isRearGun)
         {
             transform.rotation = Quaternion.Lerp(transform.rotation, enemy.transform.rotation, rotationSpeed * Time.deltaTime);
         }
         else
         {
-            //transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Inverse(defaultRotation), Time.deltaTime * rotationSpeed);
-            //transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.AngleAxis(180, enemy.transform.forward), rotationSpeed * Time.deltaTime);
-            //transform.localRotation = defaultRotation * enemy.transform.rotation;
-            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0f, 0f, enemy.transform.rotation.z * -1f), Time.deltaTime * rotationSpeed);
+            transform.rotation = Quaternion.Lerp(transform.rotation, defaultRotation * enemy.transform.rotation, Time.deltaTime * rotationSpeed);
         }
 
     }
