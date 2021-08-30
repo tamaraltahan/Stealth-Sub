@@ -72,6 +72,10 @@ public class EnemyBase : MonoBehaviour
     // Update is called once per frame
     protected virtual void Update()
     {
+        if(player.dived && playerDetected)
+        {
+            playerDetected = false;
+        }
         Wander();
         Debug.DrawLine(this.transform.position, target, Color.yellow);
     }

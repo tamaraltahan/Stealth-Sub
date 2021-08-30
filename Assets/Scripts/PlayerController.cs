@@ -15,7 +15,7 @@ public class PlayerController : MonoBehaviour
     [Header("Oxygen")]
     public float diveCD = 1f;
     private float cools;
-    [SerializeField] bool dived = false;
+    public bool dived = false;
     public float maxOxygen;
     float currentOxygen;
     public Image OxygenMeter;
